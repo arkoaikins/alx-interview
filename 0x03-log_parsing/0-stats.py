@@ -1,39 +1,42 @@
 #!/usr/bin/python3
 import sys
 import re
-from collections import Counter
 
+# store the status codes in a dictionary
+status_codes_dict = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
+                     '404': 0, '405': 0, '500': 0}
 
 total_size = 0
-status_dict = Counter()
-line_count = 0
-possible_status_codes = [200, 301, 400, 401, 403, 404, 405, 500]
-pattern = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[.*\] \"GET /projects/260 HTTP/1.1\" (\d{3}) (\d+)"  # nopep8
-
+count = 0  # to count the number lines
 
 def print_statistics():
-    """Prints the current statistics."""
-    print("File size: {}".format(total_size))
-    for code, count in sorted(status_dict.items()):
-        print("{}: {}".format(code, count))
-
+    print('File size: {}'.format(total_size))
+    for key, value in sorted(status_codes_dict.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
 
 try:
-    for log in sys.stdin:
-        line_count += 1
-        match = re.search(pattern, log)
-
+    for line in sys.stdin:
+        match = re.match(r'^\S+ - \[.*\] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$', line)
         if match:
             status_code, file_size = match.groups()
-            if status_code.isdigit() and int(status_code) in possible_status_codes:  # nopep8
-                status_dict[status_code] += 1
-                total_size += int(file_size)
 
-        if line_count % 10 == 0 or line_count == 1:
-            print_statistics()
+            # check if the status code received exists in the dictionary and increment its count
+            if status_code in status_codes_dict:
+                status_codes_dict[status_code] += 1
+
+            # update the  total size
+            total_size += int(file_size)
+
+            # update count of lines
+            count += 1
+
+            if count == 10:
+                count = 0  # reset count
+                print_statistics()
 
 except KeyboardInterrupt:
     pass
 
-# Print final statistics
-print_statistics()
+finally:
+    print_statistics()
