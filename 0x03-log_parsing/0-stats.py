@@ -9,19 +9,20 @@ status_codes_dict = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0,
 total_size = 0
 count = 0  # to count the number lines
 
+
 def print_statistics():
     print('File size: {}'.format(total_size))
     for key, value in sorted(status_codes_dict.items()):
         if value != 0:
             print('{}: {}'.format(key, value))
 
+
 try:
     for line in sys.stdin:
-        match = re.match(r'^\S+ - \[.*\] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$', line)
+        match = re.match(r'^\S+ - \[.*\] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$', line)  # nopep8
         if match:
             status_code, file_size = match.groups()
 
-            # check if the status code received exists in the dictionary and increment its count
             if status_code in status_codes_dict:
                 status_codes_dict[status_code] += 1
 
