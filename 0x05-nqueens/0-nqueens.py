@@ -18,7 +18,7 @@ def solve_n_queens(queens, row, n):
         print(solution)
         return
 
-    # Try placing queen in each column
+    # place queen in each column
     for col in range(n):
         if is_valid(queens, row, col):
             queens[row] = col
@@ -26,19 +26,19 @@ def solve_n_queens(queens, row, n):
 
 
 def main():
-    """solves the n quees puzzle"""
+    """solves the n queens puzzle"""
     if len(sys.argv) != 2:
-        print("Usage: nqueens N", file=sys.stderr)
+        print("Usage: nqueens N")
         sys.exit(1)
 
     try:
         n = int(sys.argv[1])
     except ValueError:
-        print("N must be a number", file=sys.stderr)
+        print("N must be a number")
         sys.exit(1)
 
     if n < 4:
-        print("N must be at least 4", file=sys.stderr)
+        print("N must be at least 4")
         sys.exit(1)
 
     # Initialize empty board
