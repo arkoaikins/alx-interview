@@ -18,18 +18,19 @@ def isWinner(x, nums):
      cannot be determined.
     """
 
-    def is_prime(n):
-        if n < 2:
-            return False
-        for i in range(2, int(n**0.5) + 1):
-            if n % i == 0:
-                return False
-        return True
+    def sieve_of_eratosthenes(n):
+        """seive the eratosthenes"""
+        primes = [True] * (n + 1)
+        p = 2
+        while p * p <= n:
+            if primes[p]:
+                for i in range(p * p, n + 1, p):
+                    primes[i] = False
+            p += 1
+        return [p for p in range(2, n + 1) if primes[p]]
 
-    winners = []
-
-    for n in nums:
-        primes = [i for i in range(2, n + 1) if is_prime(i)]
+    def play_game(n):
+        primes = sieve_of_eratosthenes(n)
         maria_turn = True
 
         while primes:
@@ -47,13 +48,11 @@ def isWinner(x, nums):
                     break
             maria_turn = not maria_turn
 
-        if maria_turn:
-            winners.append("Maria")
-        else:
-            winners.append("Ben")
+        return "Maria" if maria_turn else "Ben"
 
-    maria_wins = winners.count("Maria")
-    ben_wins = winners.count("Ben")
+    wins = [play_game(n) for n in nums]
+    maria_wins = wins.count("Maria")
+    ben_wins = wins.count("Ben")
 
     if maria_wins > ben_wins:
         return "Maria"
