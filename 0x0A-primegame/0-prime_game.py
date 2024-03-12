@@ -1,31 +1,35 @@
 #!/usr/bin/python3
-from sympy import sieve
-
 """
 solve the prime game challenge
 """
 
 
-def isWinner(x, nums, cache={}):
+def isWinner(x, nums):
     """
-      This function determines the winner of a prime number removal game.
+    This function determines the winner of a prime number removal game.
 
     Args:
-        x: The number of rounds played.
-        nums: A list of integers representing the
-        starting set of numbers for each round.
+      x: The number of rounds played.
+      nums: A list of integers representing the starting set of numbers
+      for each round.
 
     Returns:
-        A string indicating the winner ("Maria" or "Ben") or
-        None if the winner cannot be determined.
+     A string indicating the winner ("Maria" or "Ben") or None if the winner
+     cannot be determined.
     """
-    if x in cache:
-        return cache[x]
+
+    def is_prime(n):
+        if n < 2:
+            return False
+        for i in range(2, int(n**0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
 
     winners = []
 
     for n in nums:
-        primes = list(sieve.primerange(2, n + 1))
+        primes = [i for i in range(2, n + 1) if is_prime(i)]
         maria_turn = True
 
         while primes:
@@ -52,11 +56,8 @@ def isWinner(x, nums, cache={}):
     ben_wins = winners.count("Ben")
 
     if maria_wins > ben_wins:
-        result = "Maria"
+        return "Maria"
     elif ben_wins > maria_wins:
-        result = "Ben"
+        return "Ben"
     else:
-        result = None
-
-    cache[x] = result
-    return result
+        return None
