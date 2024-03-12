@@ -20,22 +20,42 @@ def isWinner(x, nums):
     winners = []
 
     for n in nums:
-        dp = [False] * (n + 1)
-        dp[0] = dp[1] = False
+        primes = [True] * (n + 1)
+        primes[0] = primes[1] = False
 
-        # Precompute a list of primes up to n
-        primes = sieveOfEratosthenes(n)
+        # Sieve of Eratosthenes to find all prime numbers up to n
+        for i in range(2, int(n**0.5) + 1):
+            if primes[i]:
+                for j in range(i * i, n + 1, i):
+                    primes[j] = False
 
-        # Dynamic programming approach
-        for i in range(2, n + 1):
-            for prime in primes:
-                if prime > i:
+        maria_turn = True
+        while True:
+            maria_can_move = False
+            ben_can_move = False
+
+            # Check if Maria can make a move
+            for i in range(2, n + 1):
+                if primes[i]:
+                    maria_can_move = True
+                    primes[i] = False
+                    for j in range(i * i, n + 1, i):
+                        primes[j] = False
                     break
-                if not dp[i - prime]:
-                    dp[i] = True
+
+            # Check if Ben can make a move
+            for i in range(2, n + 1):
+                if primes[i]:
+                    ben_can_move = True
+                    primes[i] = False
+                    for j in range(i * i, n + 1, i):
+                        primes[j] = False
                     break
 
-        if dp[n]:
+            if not maria_can_move or not ben_can_move:
+                break
+
+        if maria_can_move:
             winners.append("Maria")
         else:
             winners.append("Ben")
@@ -51,20 +71,3 @@ def isWinner(x, nums):
         return "Ben"
     else:
         return None
-
-
-def sieveOfEratosthenes(n):
-    """
-    Sieve of Eratosthenes to find all prime numbers up to n
-    """
-    primes = []
-    sieve = [True] * (n + 1)
-    sieve[0] = sieve[1] = False
-
-    for i in range(2, int(n**0.5) + 1):
-        if sieve[i]:
-            primes.append(i)
-            for j in range(i * i, n + 1, i):
-                sieve[j] = False
-
-    return primes
