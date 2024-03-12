@@ -4,70 +4,46 @@ solve the prime game challenge
 """
 
 
+def is_prime(n):
+    """Function to check for prime number"""
+    if n < 2:
+        return False
+    if n == 2 or n == 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+
+def get_primes(n):
+    """Function to retrieve prime numbers up to n"""
+    primes = []
+    for i in range(2, n + 1):
+        if is_prime(i):
+            primes.append(i)
+    return primes
+
+
 def isWinner(x, nums):
-    """
-    This function determines the winner of a prime number removal game.
-
-    Args:
-      x: The number of rounds played.
-      nums: A list of integers representing the starting set of numbers
-      for each round.
-
-    Returns:
-     A string indicating the winner ("Maria" or "Ben") or None if the winner
-     cannot be determined.
-    """
-    winners = []
+    """Function to determine the winner of the Prime Game"""
+    maria = 0
+    ben = 0
 
     for n in nums:
-        primes = [True] * (n + 1)
-        primes[0] = primes[1] = False
-
-        # Sieve of Eratosthenes to find all prime numbers up to n
-        for i in range(2, int(n**0.5) + 1):
-            if primes[i]:
-                for j in range(i * i, n + 1, i):
-                    primes[j] = False
-
-        maria_turn = True
-        while True:
-            maria_can_move = False
-            ben_can_move = False
-
-            # Check if Maria can make a move
-            for i in range(2, n + 1):
-                if primes[i]:
-                    maria_can_move = True
-                    primes[i] = False
-                    for j in range(i * i, n + 1, i):
-                        primes[j] = False
-                    break
-
-            # Check if Ben can make a move
-            for i in range(2, n + 1):
-                if primes[i]:
-                    ben_can_move = True
-                    primes[i] = False
-                    for j in range(i * i, n + 1, i):
-                        primes[j] = False
-                    break
-
-            if not maria_can_move or not ben_can_move:
-                break
-
-        if maria_can_move:
-            winners.append("Maria")
+        primes = get_primes(n)
+        if len(primes) % 2 == 0:
+            ben += 1
         else:
-            winners.append("Ben")
+            maria += 1
 
-    # Count the number of wins for each player
-    maria_wins = winners.count("Maria")
-    ben_wins = winners.count("Ben")
-
-    # Determine the overall winner
-    if maria_wins > ben_wins:
+    if maria > ben:
         return "Maria"
-    elif ben_wins > maria_wins:
+    elif ben > maria:
         return "Ben"
     else:
         return None
