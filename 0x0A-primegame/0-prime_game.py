@@ -5,7 +5,7 @@ solve the prime game challenge
 
 
 def is_prime(n):
-    """Function to check for prime number"""
+    """check for prime number"""
     if n < 2:
         return False
     if n == 2 or n == 3:
@@ -21,7 +21,7 @@ def is_prime(n):
 
 
 def get_primes(n):
-    """Function to retrieve prime numbers up to n"""
+    """retrieve prime numbers up to n"""
     primes = []
     for i in range(2, n + 1):
         if is_prime(i):
@@ -30,7 +30,7 @@ def get_primes(n):
 
 
 def isWinner(x, nums):
-    """Function to determine the winner of the Prime Game"""
+    """determine the winner of the Prime Game"""
     maria = 0
     ben = 0
 
